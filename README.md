@@ -1,3 +1,6 @@
+# An example flutter project on how to use Flutter with Meteor.
+https://medium.com/@tanutapi/writing-flutter-mobile-application-with-meteor-backend-643d2c1947d0
+
 # flutter_app
 
 A new Flutter application.
