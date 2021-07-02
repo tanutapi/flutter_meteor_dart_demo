@@ -4,7 +4,7 @@ import 'package:flutter_app/chat_page.dart';
 import 'package:flutter_app/connecting_page.dart';
 import 'package:flutter_app/login_page.dart';
 
-MeteorClient meteor = MeteorClient.connect(url: 'http://thaifastdict.com:3000');
+MeteorClient meteor = MeteorClient.connect(url: 'http://localhost:3000');
 
 void main() => runApp(MyApp());
 
