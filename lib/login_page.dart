@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(
               width: double.maxFinite,
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text('Login'),
                 onPressed: (_username.length > 0 && _password.length > 0)
                     ? () {
@@ -58,9 +58,10 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text('Error'),
-                                    content: Text(err.details),
+                                    content: Text(err.details ??
+                                        "Error with no details."),
                                     actions: <Widget>[
-                                      FlatButton(
+                                      TextButton(
                                         child: Text('Dismiss'),
                                         onPressed: () {
                                           Navigator.of(context).pop(0);

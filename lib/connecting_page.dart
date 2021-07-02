@@ -15,11 +15,11 @@ class ConnectingPage extends StatelessWidget {
               SizedBox(
                 height: 12.0,
               ),
-              Text('Connecting to server...'),
+              Text('Connecting to the server...'),
               SizedBox(
                 height: 12.0,
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Retry to connect now!'),
                 onPressed: () {
                   meteor.reconnect();

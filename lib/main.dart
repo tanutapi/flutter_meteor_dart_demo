@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:dart_meteor/dart_meteor.dart';
-import 'package:flutter_app/connecting_page.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/chat_page.dart';
+import 'package:flutter_app/connecting_page.dart';
 import 'package:flutter_app/login_page.dart';
 
-MeteorClient meteor = MeteorClient.connect(url: 'http://localhost:3000');
+MeteorClient meteor = MeteorClient.connect(url: 'http://thaifastdict.com:3000');
 
 void main() => runApp(MyApp());
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           stream: meteor.status(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.connected) {
+              if (snapshot.data!.connected) {
                 return StreamBuilder<Map<String, dynamic>>(
                   stream: meteor.user(),
                   builder: (context, snapshot) {

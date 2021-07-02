@@ -10,18 +10,15 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textEditingControllerMessage =
       TextEditingController();
-  SubscriptionHandler _sub;
-  Map<String, dynamic> _users;
+  SubscriptionHandler? _sub;
+  Map<String, dynamic>? _users;
 
   @override
   void initState() {
     super.initState();
-    meteor.prepareCollection('messages');
-    _sub = meteor.subscribe('messages', []);
+    _sub = meteor.subscribe('messages');
 
-    meteor.collections['users'].listen((data) {
-      print('abc');
-      print(data);
+    meteor.collection('users').listen((data) {
       _users = data;
     });
   }
@@ -29,16 +26,14 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     _textEditingControllerMessage.dispose();
-    if (_sub != null) {
-      _sub.stop();
-      _sub = null;
-    }
+    _sub?.stop();
+    _sub = null;
     super.dispose();
   }
 
   void _sendMessage() {
     var msg = _textEditingControllerMessage.text;
-    meteor.call('sendMessage', [msg]).then((res) {
+    meteor.call('sendMessage', args: [msg]).then((res) {
       _textEditingControllerMessage.text = '';
     }).catchError((_) {});
   }
@@ -51,13 +46,13 @@ class _ChatPageState extends State<ChatPage> {
             title: Text('Delete'),
             content: Text('Do you want to delete all chat message?'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('Yes'),
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text('No'),
                 onPressed: () {
                   Navigator.of(context).pop(false);
@@ -66,7 +61,7 @@ class _ChatPageState extends State<ChatPage> {
             ],
           );
         })) {
-      meteor.call('clearAllMessages', []).catchError((_) {});
+      meteor.call('clearAllMessages').catchError((_) {});
     }
   }
 
@@ -105,14 +100,13 @@ class _ChatPageState extends State<ChatPage> {
             ),
             Expanded(
               child: StreamBuilder(
-                stream: meteor.collections['messages'],
+                stream: meteor.collection('messages'),
                 builder:
                     (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                  if (snapshot.hasData) {
-                    List<dynamic> messages = snapshot.data.values.toList();
+                  if (snapshot.hasData && snapshot.data != null) {
+                    List<dynamic> messages = snapshot.data!.values.toList();
                     messages.sort((x, y) {
-                      return x['createdAt']['\$date']
-                          .compareTo(y['createdAt']['\$date']);
+                      return x['createdAt'].compareTo(y['createdAt']);
                     });
                     if (messages.length > 0) {
                       return ListView.builder(
@@ -120,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
                         itemBuilder: (context, idx) {
                           String from = messages[idx]['from'];
                           if (_users != null) {
-                            from = _users[messages[idx]['from']]['username'];
+                            from = _users![messages[idx]['from']]['username'];
                           }
                           return ListTile(
                             leading: Text(from),
@@ -144,7 +138,7 @@ class _ChatPageState extends State<ChatPage> {
                       controller: _textEditingControllerMessage,
                     ),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Send'),
                     onPressed: _sendMessage,
                   ),
